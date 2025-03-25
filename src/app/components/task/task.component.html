@@ -1,0 +1,49 @@
+<div
+  class="task bg-gray-100 p-4 rounded-lg flex justify-between items-center shadow-sm mb-5"
+>
+  <div>
+    <p class="font-medium text-lg">{{ task().title }}</p>
+    <span class="text-sm text-gray-500">Priority: {{ task().priority }}</span>
+    <p class="text-sm">{{ task().description }}</p>
+  </div>
+
+  <div class="flex items-center space-x-3">
+    <select
+      class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
+      [value]="task().status"
+    >
+      <option value="not-started">Not Started</option>
+      <option value="in-progress">In Progress</option>
+      <option value="completed">Completed</option>
+    </select>
+    <select
+      class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
+      [value]="task().priority"
+    >
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+
+    <select
+      class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
+    >
+      <option>Set a reminder</option>
+      <option value="High">24h</option>
+      <option value="Medium">12h</option>
+      <option value="Low">1h</option>
+    </select>
+    <button
+      class="px-3 py-1.5 bg-fuchsia-300 text-white rounded-lg hover:bg-fuchsia-600 cursor-pointer transition"
+      (click)="onEditTask()"
+    >
+      <fa-icon [icon]="faEdit"></fa-icon>
+    </button>
+    <button
+      class="px-3 py-1.5 bg-fuchsia-300 text-white rounded-lg hover:bg-fuchsia-600 cursor-pointer transition"
+      (click)="onDeleteTask()"
+    >
+      <fa-icon [icon]="faTrash"></fa-icon>
+    </button>
+  </div>
+</div>

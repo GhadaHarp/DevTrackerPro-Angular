@@ -1,0 +1,53 @@
+<!-- <section class="bg-mainColor w-[80%] rounded-lg py-4 px-8">
+  <header class="flex items-center justify-between">
+    <h2 class="text-white font-semibold text-2xl">Ghada's Projects</h2>
+    <button
+      type="submit"
+      class="py-2 px-4 rounded-lg font-medium transition duration-300 text-white bg-secondaryColor hover:bg-secondaryColor cursor-pointer"
+    >
+      Add Project
+    </button>
+  </header>
+  <div class="card mt-2">
+    <article>
+      <h2>Project title</h2>
+      <time>18-03-2025</time>
+      <p>Project description</p>
+      <div class="actions">
+        <button>Done</button>
+        <button>Edit</button>
+        <button>add task</button>
+      </div>
+    </article>
+  </div>
+</section> -->
+
+<!-- @if (isAddingProject) {
+<app-new-project [userId]="userId" />
+} -->
+<section class="bg-mainColor w-[90%] rounded-2xl py-6 px-10 shadow-xl">
+  <header class="flex items-center justify-between mb-6">
+    <h2 class="text-white font-bold text-3xl">
+      {{ user?.name | uppercase }}'s Projects
+    </h2>
+    <button
+      type="submit"
+      class="py-2 px-6 rounded-xl font-medium transition duration-300 text-white bg-secondaryColor hover:bg-opacity-80 cursor-pointer hover:bg-fuchsia-500"
+      (click)="onStartAddProject()"
+    >
+      + Add Project
+    </button>
+  </header>
+  @for (project of userProjects(); track project._id) {
+  <app-project
+    [project]="project"
+    (deleteProject)="onDeleteProject($event)"
+    (editProject)="onEditProject($event)"
+    (addTask)="onStartAddTask($event)"
+    (editTask)="onEditTask($event)"
+  />
+
+  }
+  <!-- <app-project />
+  <app-project /> -->
+</section>

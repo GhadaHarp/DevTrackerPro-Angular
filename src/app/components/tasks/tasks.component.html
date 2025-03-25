@@ -1,0 +1,42 @@
+<div class="tasks space-y-4">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="font-semibold text-lg">Projects's Tasks</h3>
+    <div class="flex space-x-4">
+      <select
+        class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
+      >
+        <option>Sort by Priority</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+      <select
+        class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
+        value="priority:low"
+        (change)="filterTasks($event)"
+      >
+        <option value="">Filter by</option>
+        <option value="priority:high">priority: High</option>
+        <option value="priority:medium">priority: Medium</option>
+        <option value="priority:low">priority: Low</option>
+        <option value="status:not-started">status: Not Started</option>
+        <option value="status:in-progress">status: In Progress</option>
+        <option value="status:completed">status: Completed</option>
+        <!-- <option value="today">Deadline: Today</option>
+        <option value="tomorrow">Deadline: Tomorrow</option>
+        <option value="This Week">Deadline: This Week</option>
+        <option value="This Month">Deadline: This Month</option> -->
+      </select>
+    </div>
+  </div>
+  @for (task of tasks; track task._id) {
+
+  <app-task
+    [task]="task"
+    (deleteTask)="onDeleteTask($event)"
+    (editTask)="onEditTask($event)"
+  />
+  }
+  <!-- <app-task />
+  <app-task /> -->
+</div>

@@ -1,0 +1,116 @@
+<div class="backdrop" (click)="onCancel()"></div>
+<dialog open>
+  <h2>{{currTaskData?'Edit Task':'Add Task'}}</h2>
+  <form (ngSubmit)="onSubmit()" [formGroup]="newTaskForm">
+    <p>
+      <label for="title">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+
+        [(ngModel)]="enteredTitle"
+        formControlName="title"
+      />
+      @if (newTaskForm.get('title')?.touched && newTaskForm.get('title')?.invalid) {
+        @if (newTaskForm.get('title')?.errors?.['required']) {
+        <p style="color: red; font-size: 1rem">Task title is required.</p>
+        } @else if (newTaskForm.get('title')?.errors?.['minlength']) {
+        <p style="color: red; font-size: 1rem">
+          Task title must be at least 3 characters long.
+        </p>
+        }
+         @else if (newTaskForm.get('title')?.errors?.['maxlength']) {
+        <p style="color: red; font-size: 1rem">
+          Task title cant exceed 100 characters.
+        </p>
+        }
+       }
+    </p>
+
+    <p>
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        rows="5"
+        name="description"
+        [(ngModel)]="enteredDescription"
+        formControlName="description"
+      ></textarea>
+      @if (newTaskForm.get('description')?.touched && newTaskForm.get('description')?.invalid) {
+        @if (newTaskForm.get('description')?.errors?.['required']) {
+        <p style="color: red; font-size: 1rem">Task description is required.</p>
+        } @else if (newTaskForm.get('description')?.errors?.['minlength']) {
+        <p style="color: red; font-size: 1rem">
+          Task description must be at least 3 characters long.
+        </p>
+        }
+         @else if (newTaskForm.get('description')?.errors?.['maxlength']) {
+        <p style="color: red; font-size: 1rem">
+          Task description cant exceed 500 characters.
+        </p>
+        }
+       }
+    </p>
+
+    <div>
+      <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+      <select
+        id="priority"
+        formControlName="priority"
+        [(ngModel)]="enteredPriority"
+        class="w-full p-2 border text-white border-gray-300 rounded-md focus:ring-fuchsia-500 focus:border-fuchsia-500"
+      >
+        <option value=""  disabled>Select Priority</option>
+        <option value="low" class="text-black">Low</option>
+        <option value="medium" class="text-black">Medium</option>
+        <option value="high"class="text-black" >High</option>
+      </select>
+   
+    </div>
+
+    <!-- Status Select -->
+    <div>
+      <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+      <select
+        id="status"
+        formControlName="status"
+      [(ngModel)]="enteredStatus"
+        class="w-full p-2 border text-white border-gray-300 rounded-md focus:ring-fuchsia-500 focus:border-fuchsia-500"
+      >
+        <option value="" class="text-black" disabled>Select Status</option>
+        <option value="not-started" class="text-black">Not Started</option>
+        <option value="in-progress" class="text-black">In Progress</option>
+        <option value="completed" class="text-black">Completed</option>
+      </select>
+   
+    </div>
+
+
+    <p class="actions">
+      <button type="button" (click)="onCancel()">Cancel</button>
+      <button type="submit" [disabled]="newTaskForm.invalid">{{currTaskData?'Edit':'Create'}}</button>
+    </p>
+  </form>
+</dialog>
+<!-- <p>
+      <label for="due-date">Due Date</label>
+      <input
+        type="date"
+        id="due-date"
+        name="due-date"
+        [(ngModel)]="enteredDate"
+        formControlName="dueDate"
+      />
+      @if (newTaskForm.get('dueDate')?.touched && newTaskForm.get('dueDate')?.invalid) {
+        @if (newTaskForm.get('dueDate')?.errors?.['required']) {
+        <p style="color: red; font-size: 1rem">Task dueDate is required.</p>
+        }
+    
+         @else if (newTaskForm.get('dueDate')?.errors) {
+        <p style="color: red; font-size: 1rem">
+          Task dueDate is invalid
+        </p>
+        }
+       }
+    </p> -->

@@ -1,0 +1,81 @@
+<div class="flex w-full h-screen items-center justify-center">
+  <div
+    class="w-full max-w-[80%] md:max-w-[70%] md:h-[80%] bg-white shadow-xl flex flex-col md:flex-row items-center justify-between p-8 rounded-lg gap-12"
+  >
+    <!-- Image Section -->
+    <div class="hidden md:flex w-1/2 h-full items-center justify-center">
+      <img
+        src="assets/images/task-management-logo.png"
+        alt="logo"
+        class="w-auto h-[80%] rounded-lg object-contain"
+      />
+    </div>
+
+    <!-- Form Section -->
+    <div class="w-full md:w-1/2 space-y-6">
+      <h2 class="text-3xl font-bold text-center text-mainColor">
+        DevTrackerPro
+      </h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4">
+        <!-- Email -->
+        <div class="h-[90px]">
+          <label for="email" class="block text-sm font-medium mb-1"
+            >Email</label
+          >
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-mainColor"
+          />
+          @if (loginForm.get('email')?.touched &&
+          loginForm.get('email')?.invalid) { @if
+          (loginForm.get('email')?.errors?.['required']) {
+          <p class="text-red-500 text-sm mt-1">Email is required.</p>
+          } @else if (loginForm.get('email')?.errors?.['email']) {
+          <p class="text-red-500 text-sm mt-1">Invalid email format.</p>
+          } }
+        </div>
+
+        <!-- Password -->
+        <div class="h-[90px]">
+          <label for="password" class="block text-sm font-medium mb-1"
+            >Password</label
+          >
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-mainColor"
+          />
+          @if (loginForm.get('password')?.touched &&
+          loginForm.get('password')?.invalid) { @if
+          (loginForm.get('password')?.errors?.['required']) {
+          <p class="text-red-500 text-sm mt-1">Password is required.</p>
+          } @else if (loginForm.get('password')?.errors?.['minlength']) {
+          <p class="text-red-500 text-sm mt-1">
+            Password must be at least 8 characters long.
+          </p>
+          } }
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full py-2 rounded-lg font-medium transition duration-300 text-white bg-mainColor hover:bg-secondaryColor disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Login
+        </button>
+      </form>
+
+      <!-- Signup Redirect -->
+      <p class="text-center text-md mt-4">
+        Don't have an account?
+        <a routerLink="/signup" class="text-mainColor font-bold hover:underline"
+          >Sign Up</a
+        >
+      </p>
+    </div>
+  </div>
+</div>

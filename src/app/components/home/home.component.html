@@ -1,0 +1,32 @@
+<app-header />
+<main class="flex items-center mt-9 justify-center w-[100%]">
+  @if (isAddingProject) {
+  <app-new-project
+    [userId]="userId"
+    [currProjectData]="project"
+    (close)="onClose()"
+    (addProject)="onAddProject($event)"
+    (editProject)="updateProject($event)"
+  />
+
+  } @if (isAddingTask) {
+  <app-new-task
+    [userId]="userId"
+    [project]="currProjectId"
+    (close)="onClose()"
+    (addTask)="onAddTask($event)"
+    [currTaskData]="task"
+  />
+
+  }
+  <app-projects
+    [userProjects]="userProjects"
+    (addProject)="onStartAddProject()"
+    (deleteProject)="onDeleteProject($event)"
+    (editProject)="onStartEditProject($event)"
+    (addTask)="onStartAddTask($event)"
+    (editTask)="onEditTask($event)"
+  />
+  <!-- <app-project /> -->
+  <!-- <app-new-task [userId]="'s'" /> -->
+</main>
