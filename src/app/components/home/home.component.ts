@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   isAddingTask = false;
   project: any;
   task: any;
+  tasks: any;
   currProjectId!: string;
   currTasktId!: string;
   router = inject(Router);
@@ -103,18 +104,55 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+  // updateProject(project: any) {
+  //   this.project = { ...project };
+  //   const index = this.userProjects.findIndex(
+  //     (p: any) => p._id === project._id
+  //   );
+  //   if (index !== -1) {
+  //     this.userProjects[index] = project;
+  //     this.userProjects = [...this.userProjects];
+  //     this.cdr.markForCheck();
+  //   }
+  //   console.log(this.project);
+  //   this.cdr.detectChanges();
+  // }
+
   updateProject(project: any) {
     this.project = { ...project };
     const index = this.userProjects.findIndex(
       (p: any) => p._id === project._id
     );
     if (index !== -1) {
-      this.userProjects[index] = project;
-      this.userProjects = [...this.userProjects];
-      this.cdr.markForCheck();
+      // this.userProjects[index] = project;
+      // this.userProjects = [...this.userProjects];
+      // this.cdr.markForCheck();
+      // console.log(this.userProjects);
+      this.fetchProjects();
     }
+
+    // ✅ Fetch tasks for the updated project
+    this.fetchProjectTasks(project._id);
+
     console.log(this.project);
     this.cdr.detectChanges();
+  }
+
+  // ✅ New function to fetch tasks
+  fetchProjectTasks(projectId: string) {
+    this.apiService.getProjectTasks(projectId, this.token).subscribe(
+      (res) => {
+        this.tasks = res.data.tasks;
+        console.log('taslllllllllllll', this.tasks);
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.log(error);
+        this.router.navigate(['/error'], {
+          state: { message: error.error.message },
+        });
+      }
+    );
   }
 
   onAddProject(newProject: any) {

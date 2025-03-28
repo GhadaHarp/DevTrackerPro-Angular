@@ -3,9 +3,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { APIService } from '../../services/API.service';
 import { Router } from '@angular/router';
+import { CommonModule, DatePipe } from '@angular/common';
 @Component({
   selector: 'app-task',
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, CommonModule, DatePipe],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css',
 })
