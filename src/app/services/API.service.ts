@@ -36,6 +36,15 @@ export class APIService {
       headers,
     });
   }
+  getProjectTasks(projectId: string, token: string) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<any>(`${this.apiUrl}/tasks?project=${projectId}`, {
+      headers,
+    });
+  }
 
   addTask(taskData: any, token: any): Observable<any> {
     const headers = new HttpHeaders({
@@ -77,14 +86,18 @@ export class APIService {
       headers,
     });
   }
-  editProject(projectId: any, taskData: any, token: any): Observable<any> {
+  editProject(projectId: any, projectData: any, token: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.patch(`${this.apiUrl}/projects/${projectId}`, taskData, {
-      headers,
-    });
+    return this.http.patch(
+      `${this.apiUrl}/projects/${projectId}`,
+      projectData,
+      {
+        headers,
+      }
+    );
   }
   signup(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/users/signup`, data);

@@ -52,6 +52,27 @@
         }
        }
     </p>
+    <p>
+      <label for="due-date">Due Date</label>
+      <input
+        type="date"
+        id="due-date"
+        name="due-date"
+        [(ngModel)]="enteredDate"
+        formControlName="dueDate"
+      />
+      @if (newTaskForm.get('dueDate')?.touched && newTaskForm.get('dueDate')?.invalid) {
+        @if (newTaskForm.get('dueDate')?.errors?.['required']) {
+        <p style="color: red; font-size: 1rem">Task dueDate is required.</p>
+        }
+    
+         @else if (newTaskForm.get('dueDate')?.errors) {
+        <p style="color: red; font-size: 1rem">
+          Task dueDate is invalid
+        </p>
+        }
+       }
+    </p> 
 
     <div>
       <label for="priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
