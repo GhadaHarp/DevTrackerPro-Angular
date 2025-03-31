@@ -74,6 +74,8 @@ export class NewTaskComponent implements OnChanges {
       this.enteredStatus = this.currTaskData.status;
       const date = new Date(this.currTaskData.deadline);
       this.enteredDate = date.toISOString().split('T')[0];
+      this.enteredDate = date.toISOString().slice(0, 16); // Extracts YYYY-MM-DDTHH:mm
+
       this.newTaskForm.setValue({
         title: this.enteredTitle,
         description: this.enteredDescription,
@@ -112,7 +114,8 @@ export class NewTaskComponent implements OnChanges {
         .subscribe(
           (res) => {
             console.log(res);
-            this.addTask.emit(res.data);
+            // this.addTask.emit(res.data);
+            this.editTask.emit(res.data);
             this.close.emit();
           },
           (error) => {
@@ -147,13 +150,10 @@ export class NewTaskComponent implements OnChanges {
         },
         (error) => {
           console.log(error);
-          if (error.status == 403) {
-            this.router.navigate(['/payment']);
-          } else {
-            this.router.navigate(['/error'], {
-              state: { message: error.error.message },
-            });
-          }
+
+          this.router.navigate(['/error'], {
+            state: { message: error.error.message },
+          });
         }
       );
   }

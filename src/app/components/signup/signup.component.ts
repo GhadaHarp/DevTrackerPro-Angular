@@ -46,7 +46,7 @@ export class SignupComponent {
     if (this.signupForm.valid) {
       this.apiService.signup(this.signupForm.value).subscribe(
         (res) => {
-          console.log(res);
+          // console.log(res);
 
           localStorage.clear();
 

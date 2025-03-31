@@ -72,6 +72,7 @@ export class HomeComponent implements OnInit {
       (res) => {
         console.log(res);
         this.userProjects = res.data;
+
         console.log(this.userProjects);
       },
       (error) => {
@@ -104,19 +105,6 @@ export class HomeComponent implements OnInit {
       }
     );
   }
-  // updateProject(project: any) {
-  //   this.project = { ...project };
-  //   const index = this.userProjects.findIndex(
-  //     (p: any) => p._id === project._id
-  //   );
-  //   if (index !== -1) {
-  //     this.userProjects[index] = project;
-  //     this.userProjects = [...this.userProjects];
-  //     this.cdr.markForCheck();
-  //   }
-  //   console.log(this.project);
-  //   this.cdr.detectChanges();
-  // }
 
   updateProject(project: any) {
     this.project = { ...project };
@@ -124,27 +112,53 @@ export class HomeComponent implements OnInit {
       (p: any) => p._id === project._id
     );
     if (index !== -1) {
-      // this.userProjects[index] = project;
-      // this.userProjects = [...this.userProjects];
-      // this.cdr.markForCheck();
-      // console.log(this.userProjects);
+      this.userProjects[index] = project;
+      this.userProjects = [...this.userProjects];
+      this.cdr.markForCheck();
+      console.log(this.userProjects);
       this.fetchProjects();
     }
 
+    console.log('jjjjjjjjjjjjjj', this.project);
     // ✅ Fetch tasks for the updated project
     this.fetchProjectTasks(project._id);
 
-    console.log(this.project);
     this.cdr.detectChanges();
   }
 
-  // ✅ New function to fetch tasks
+  // // ✅ New function to fetch tasks
+  // fetchProjectTasks(projectId: string) {
+  //   console.log('project id', projectId);
+  //   this.apiService.getProjectTasks(projectId, this.token).subscribe(
+  //     (res) => {
+  //       this.tasks = res.data.tasks;
+  //       console.log(this.tasks);
+  //       this.cdr.detectChanges();
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //       this.router.navigate(['/error'], {
+  //         state: { message: error.error.message },
+  //       });
+  //     }
+  //   );
+  // }
   fetchProjectTasks(projectId: string) {
+    console.log('Fetching tasks for project:', projectId);
     this.apiService.getProjectTasks(projectId, this.token).subscribe(
       (res) => {
-        this.tasks = res.data.tasks;
-        console.log('taslllllllllllll', this.tasks);
-        this.cdr.detectChanges();
+        console.log('Received tasks:', res.data.tasks);
+        const updatedTasks = [...res.data.tasks]; // ✅ Ensure a new array reference
+
+        // ✅ Find project and update its reference
+        this.userProjects = this.userProjects.map((project) =>
+          project._id === projectId
+            ? { ...project, tasks: updatedTasks } // ✅ New object reference
+            : project
+        );
+
+        console.log('Updated userProjects:', this.userProjects);
+        this.cdr.detectChanges(); // ✅ Force UI update
       },
       (error) => {
         console.log(error);
@@ -189,17 +203,36 @@ export class HomeComponent implements OnInit {
       }
     );
   }
+  updateTask(newTask: any) {
+    console.log('updating task', newTask);
+    this.updateProject(newTask.project);
+    // this.fetchProjectTasks(newTask.project._id);
+  }
   onStartAddTask(projectId: any) {
     this.isAddingTask = true;
     this.currProjectId = projectId;
   }
+
+  // onAddTask(newTask: any) {
+  //   console.log('addingtask', newTask);
+
+  //   this.fetchProjectTasks(newTask.project);
+  // }
   onAddTask(newTask: any) {
-    console.log(newTask);
-    this.fetchProjects();
+    console.log('Adding task:', newTask);
+    this.userProjects = this.userProjects.map((project) =>
+      project._id === newTask.project
+        ? { ...project, tasks: [...project.tasks, newTask] } // ✅ New object reference
+        : project
+    );
+
+    console.log('Updated userProjects:', this.userProjects);
+    this.cdr.detectChanges(); // ✅ Ensure UI refresh
   }
+
   onEditTask(task: any) {
     this.isAddingTask = true;
-    console.log(task);
+    // console.log(task);
     this.task = task;
   }
   onClose() {

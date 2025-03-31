@@ -15,7 +15,9 @@
 
   <!-- Account Section -->
   <div class="account flex items-center gap-4">
-    <span class="hidden sm:block text-sm md:text-base">Welcome, Ghada</span>
+    <span class="hidden sm:block text-sm md:text-base"
+      >Welcome, {{ user?.name | uppercase }}</span
+    >
     <button
       (click)="onLogout()"
       class="text-white text-xl hover:text-secondaryColor transition cursor-pointer"

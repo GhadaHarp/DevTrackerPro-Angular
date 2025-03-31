@@ -28,7 +28,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.apiService.login(this.loginForm.value).subscribe(
         (res) => {
-          console.log(res);
+          // console.log(res);
           localStorage.clear();
 
           localStorage.setItem('token', res.token);

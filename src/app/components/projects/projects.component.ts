@@ -36,7 +36,7 @@ export class ProjectsComponent implements OnInit {
 
     this.apiService.getUser(this.userId).subscribe(
       (res) => {
-        console.log(res);
+        // console.log(res);
         this.user = res.data;
       },
       (error) => {
