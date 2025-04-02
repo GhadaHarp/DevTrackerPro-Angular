@@ -55,9 +55,9 @@ export class TaskComponent implements OnInit, OnDestroy {
         // Avatar Image
         const avatar = document.createElement('img');
         avatar.src = 'https://cdn-icons-png.flaticon.com/128/3059/3059526.png';
-        avatar.style.width = '24px';
-        avatar.style.height = '24px';
-        avatar.style.borderRadius = '50%';
+        avatar.style.width = '32px';
+        avatar.style.height = '32px';
+        // avatar.style.borderRadius = '50%';
 
         // Text Content
         const textSpan = document.createElement('span');
@@ -81,7 +81,7 @@ export class TaskComponent implements OnInit, OnDestroy {
 
         return container;
       })(),
-      duration: -1, // 🔥 Stays until "X" is clicked
+      duration: 10000, // 🔥 Stays until "X" is clicked
       close: false, // Disable default close button (using custom "X")
       gravity: 'top',
       position: 'center',
@@ -122,18 +122,23 @@ export class TaskComponent implements OnInit, OnDestroy {
     this.elapsedTime = this.task().timeSpent || 0;
 
     // 🔔 Listen for task reminders from WebSocket
-    this.socketService.on('taskReminder').subscribe((reminders: any[]) => {
-      // Check if the reminder is relevant to this task
-      reminders.forEach((reminder) => {
-        if (
-          reminder.userId === this.task().userId &&
-          reminder.title === this.task().title
-        ) {
-          this.showNotification(
-            `Reminder: "${reminder.title}" is due in ${reminder.timeLeft} hours!`
-          );
-        }
-      });
+    this.socketService.on('taskReminder').subscribe((reminder: any) => {
+      if (!this.task()) return; // Ensure task exists before processing the reminder
+
+      console.log('Received Reminder:', reminder);
+
+      // Check if the reminder is for the current task and user
+      if (
+        reminder.userId === this.task().userId &&
+        reminder.title === this.task().title
+      ) {
+        const timeLeft = reminder.timeLeft;
+        const displayTime = timeLeft >= 60 ? timeLeft / 60 : timeLeft; // Convert to hours if needed
+
+        this.showNotification(
+          `⏳ Reminder: Task "${reminder.title}" is due in ${displayTime} hour!`
+        );
+      }
     });
   }
   onDeleteTask() {
@@ -198,24 +203,61 @@ export class TaskComponent implements OnInit, OnDestroy {
       .toString()
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
-  setReminder(event: any) {
-    console.log(Number(event.target.value));
-    const timeLeft = Number(event.target.value);
+  // setReminder(event: any) {
+  //   console.log(Number(event.target.value));
+  //   const timeLeft = Number(event.target.value);
+  //   this.apiService
+  //     .editTask(
+  //       this.task()._id,
+  //       { timeLeft, reminderEnabled: true },
+  //       this.token
+  //     )
+  //     .subscribe(
+  //       (res) => {
+  //         console.log('time left updated', res);
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     );
+  // }
+
+  setReminder() {
     this.apiService
       .editTask(
         this.task()._id,
-        { timeLeft, reminderEnabled: true },
+        { reminderActive: true, reminderTimes: [24, 12, 1] },
+        this.token
+      )
+      .subscribe((res) => {
+        console.log('Reminder set successfully', res);
+        this.task().reminderActive = true;
+      });
+  }
+  toggleReminder() {
+    this.task().reminderActive = !this.task().reminderActive; // Toggle state
+    this.task().reminderTimes?.length
+      ? (this.task().reminderTimes = [])
+      : (this.task().reminderTimes = [1, 12, 24]);
+    this.apiService
+      .editTask(
+        this.task()._id,
+        {
+          reminderActive: this.task().reminderActive,
+          reminderTimes: this.task().reminderTimes,
+        },
         this.token
       )
       .subscribe(
         (res) => {
-          console.log('time left updated', res);
+          console.log('Reminder status updated', res);
         },
         (err) => {
-          console.log(err);
+          console.error(err);
         }
       );
   }
+
   ngOnDestroy(): void {
     this.taskSubscription?.unsubscribe();
   }
