@@ -1,0 +1,84 @@
+<app-loading-spinner *ngIf="isLoadingLocal" />
+<div *ngIf="!isLoadingLocal">
+  <app-header />
+  <div class="container mx-auto p-6">
+    <!-- Page Title -->
+    <h2 class="text-2xl font-bold text-fuchsia-800 mb-4">All Tasks</h2>
+
+    <div
+      class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6"
+    >
+      <!-- Filters -->
+      <div class="flex flex-wrap gap-4 items-center">
+        <select
+          [(ngModel)]="filters.status"
+          (change)="applyFilters()"
+          class="p-2 border border-fuchsia-400 rounded-md shadow-sm text-fuchsia-600 bg-white w-full sm:w-auto"
+        >
+          <option value="">All Statuses</option>
+          <option value="not-started">Not Started</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Completed</option>
+        </select>
+
+        <select
+          [(ngModel)]="filters.priority"
+          (change)="applyFilters()"
+          class="p-2 border border-fuchsia-400 rounded-md shadow-sm text-fuchsia-600 bg-white w-full sm:w-auto"
+        >
+          <option value="">All Priorities</option>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <input
+          type="datetime-local"
+          [(ngModel)]="filters.deadline"
+          (change)="applyFilters()"
+          class="p-2 border border-fuchsia-400 rounded-md shadow-sm text-fuchsia-600 bg-white w-full sm:w-auto"
+        />
+
+        <button
+          (click)="clearFilters()"
+          class="bg-fuchsia-600 cursor-pointer text-white px-4 py-2 rounded-md shadow hover:bg-fuchsia-500 transition w-full sm:w-auto"
+        >
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Back Link -->
+      <div class="flex justify-end">
+        <a
+          routerLink="/"
+          class="text-fuchsia-600 text-base font-medium hover:underline mt-2 md:mt-0"
+        >
+          ← Back to Projects
+        </a>
+      </div>
+    </div>
+
+    @if (isEditingTask) {
+    <app-new-task
+      [currTaskData]="currentTaskData"
+      [userId]="userId"
+      (close)="close()"
+    />
+    }@else { @if (tasks.length) { @for (task of tasks; track task._id) { @if
+    (!isEditingTask) {
+
+    <app-task
+      [task]="task"
+      [canEdit]="true"
+      (editTask)="editTask($event)"
+      (deleteTask)="deleteTask($event)"
+    />
+    } } } @else {
+    <p
+      class="text-center text-lg text-gray-500 font-medium p-4 bg-gray-100 rounded-lg shadow-sm"
+    >
+      🚀 No tasks in this Category! Try using another filter.
+    </p>
+    } }
+  </div>
+</div>

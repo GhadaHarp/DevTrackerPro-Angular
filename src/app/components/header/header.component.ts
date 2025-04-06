@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { APIService } from '../../services/API.service';
@@ -7,7 +7,7 @@ import { UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [FontAwesomeModule, UpperCasePipe],
+  imports: [FontAwesomeModule, UpperCasePipe, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })

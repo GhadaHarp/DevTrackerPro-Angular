@@ -30,12 +30,12 @@ dialog {
   overflow: hidden;
   padding: 1rem;
 
-  /* Centering the dialog */
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  margin: 0; /* Remove default margin for <dialog> */
+  margin: 0;
+  z-index: 100;
 }
 
 h2 {

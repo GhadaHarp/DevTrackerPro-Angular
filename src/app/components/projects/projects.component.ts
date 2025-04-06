@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import { ProjectComponent } from '../project/project.component';
 import { APIService } from '../../services/API.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectComponent, UpperCasePipe],
+  imports: [ProjectComponent, UpperCasePipe, RouterModule],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css',
 })
@@ -27,6 +27,7 @@ export class ProjectsComponent implements OnInit {
   @Output() deleteProject = new EventEmitter<any>();
   @Output() editProject = new EventEmitter<any>();
   @Output() editTask = new EventEmitter<any>();
+  @Output() deleteTask = new EventEmitter<any>();
   constructor(private apiService: APIService, private router: Router) {}
   ngOnInit(): void {
     if (!this.token) {
@@ -62,5 +63,8 @@ export class ProjectsComponent implements OnInit {
   }
   onEditTask(task: any) {
     this.editTask.emit(task);
+  }
+  onDeleteTask(task: any) {
+    this.deleteTask.emit(task);
   }
 }

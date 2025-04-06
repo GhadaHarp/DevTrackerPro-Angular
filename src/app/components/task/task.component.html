@@ -1,188 +1,16 @@
-<!-- <div
-  class="task bg-gray-100 p-4 rounded-lg flex justify-between items-center shadow-sm mb-5"
->
-  <div>
-    <p class="font-medium text-lg">{{ task().title }}</p>
-    <span class="text-sm text-gray-500">Priority: {{ task().priority }}</span>
-    <p class="text-sm">{{ task().description }}</p>
-  </div>
-
-  <div class="flex items-center space-x-3">
-    <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
-      [value]="task().status"
-    >
-      <option value="not-started">Not Started</option>
-      <option value="in-progress">In Progress</option>
-      <option value="completed">Completed</option>
-    </select>
-    <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
-      [value]="task().priority"
-    >
-      <option value="low">Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
-    </select>
-
-    <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
-    >
-      <option>Set a reminder</option>
-      <option value="High">24h</option>
-      <option value="Medium">12h</option>
-      <option value="Low">1h</option>
-    </select>
-    <button
-      class="px-3 py-1.5 bg-fuchsia-300 text-white rounded-lg hover:bg-fuchsia-600 cursor-pointer transition"
-      (click)="onEditTask()"
-    >
-      <fa-icon [icon]="faEdit"></fa-icon>
-    </button>
-    <button
-      class="px-3 py-1.5 bg-fuchsia-300 text-white rounded-lg hover:bg-fuchsia-600 cursor-pointer transition"
-      (click)="onDeleteTask()"
-    >
-      <fa-icon [icon]="faTrash"></fa-icon>
-    </button>
-  </div>
-</div> -->
-
-<!-- 
-Just in case 
-    <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-      [value]="task().status"
-    >
-      <option value="not-started">Not Started</option>
-      <option value="in-progress">In Progress</option>
-      <option value="completed">Completed</option>
-    </select>
-
-    <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-      [value]="task().priority"
-    >
-      <option value="low">Low</option>
-      <option value="medium">Medium</option>
-      <option value="high">High</option>
-    </select> -->
-
-<!-- <div class="flex-1 min-w-0">
-      <p class="font-medium text-lg">{{ task().title }}</p>
-      <span class="text-sm text-gray-500 block"
-        >Priority : {{ task().priority }}</span
-      >
-      <span class="text-sm text-gray-00 block">Status : {{ task().status }}</span>
-      <p class="text-sm">{{ task().description }}</p>
-    </div> -->
-<!-- v2 -->
-<!-- <div
-  class="task bg-gray-100 p-4 rounded-lg flex flex-wrap lg:flex-nowrap justify-between items-center shadow-sm mb-5 gap-4"
->
-  <div class="flex-1 min-w-0">
-    <p class="font-medium text-lg">{{ task().title }}</p>
-    <time class="text-sm text-gray-400 block"
-      >Deadline: {{ task().deadline | date : "MMM d, y, h:mm a" }}</time
-    >
-
-    <div class="flex items-center gap-2 mt-1">
-      <span
-        class="flex items-center gap-1 text-sm font-medium px-2 py-0.5 rounded-md"
-        [ngClass]="{
-          'text-red-600 bg-red-100': task().priority === 'high',
-          'text-yellow-600 bg-yellow-100': task().priority === 'medium',
-          'text-green-600 bg-green-100': task().priority === 'low'
-        }"
-      >
-        <span
-          class="w-2 h-2 rounded-full"
-          [ngClass]="{
-            'bg-red-600': task().priority === 'high',
-            'bg-yellow-600': task().priority === 'medium',
-            'bg-green-600': task().priority === 'low'
-          }"
-        ></span>
-        Priority: {{ task().priority }}
-      </span>
-
-      <span
-        class="flex items-center gap-1 text-sm font-medium px-2 py-0.5 rounded-md"
-        [ngClass]="{
-          'text-gray-600 bg-gray-100': task().status === 'not-started',
-          'text-blue-600 bg-blue-100': task().status === 'in-progress',
-          'text-green-700 bg-green-100': task().status === 'completed'
-        }"
-      >
-        <span
-          class="w-2 h-2 rounded-full"
-          [ngClass]="{
-            'bg-gray-600': task().status === 'not-started',
-            'bg-blue-600': task().status === 'in-progress',
-            'bg-green-700': task().status === 'completed'
-          }"
-        ></span>
-        Status: {{ task().status }}
-      </span>
-    </div>
-
-    <p class="text-sm mt-2">{{ task().description }}</p>
-    <p class="text-sm mt-2">
-      {{task().timeLeft?
-      `Reminder set for ${task().timeLeft }
-      before deadline`:''}}
-    </p>
-  </div>
-
-  <div
-    class="flex flex-wrap lg:flex-nowrap items-center gap-3 w-full lg:w-auto"
-  >
-    <span class="text-sm font-medium text-fuchsia-600"
-      >Time Spent: {{ formatTime(elapsedTime) }}</span
-    >
-
-    <button
-      class="px-3 py-1.5 bg-green-400 text-white rounded-lg hover:bg-green-600 transition w-full md:w-auto"
-      (click)="startStopTimer()"
-    >
-      <fa-icon [icon]="timerRunning ? pause : play"></fa-icon>
-    </button>
-  </div>
-
-  <div
-    class="flex flex-wrap lg:flex-nowrap items-center gap-3 w-full lg:w-auto"
-  >
-    <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-      (change)="setReminder($event)"
-      [value]="task().timeLeft || ''"
-    >
-      <option value="">Set a reminder</option>
-      <option value="24">24h before Deadline</option>
-      <option value="12">12h before Deadline</option>
-      <option value="1">1h before Deadline</option>
-    </select>
-
-    <button
-      class="px-3 py-1.5 bg-fuchsia-400 text-white rounded-lg hover:bg-fuchsia-600 transition w-full md:w-auto"
-      (click)="onEditTask()"
-    >
-      <fa-icon [icon]="faEdit"></fa-icon>
-    </button>
-
-    <button
-      class="px-3 py-1.5 bg-fuchsia-400 text-white rounded-lg hover:bg-fuchsia-600 transition w-full md:w-auto"
-      (click)="onDeleteTask()"
-    >
-      <fa-icon [icon]="faTrash"></fa-icon>
-    </button>
-  </div>
-</div> -->
 <div
   class="task bg-gray-100 p-4 rounded-lg flex flex-wrap lg:flex-nowrap justify-between items-center shadow-sm mb-5 gap-4"
 >
   <div class="flex-1 min-w-0">
-    <p class="font-medium text-lg">{{ task().title }}</p>
+    <p
+      class="font-medium text-lg"
+      [ngClass]="{
+        'line-through text-gray-400': task().status === 'completed'
+      }"
+    >
+      {{ task().title }}
+    </p>
+
     <time class="text-sm text-gray-400 block">
       Deadline: {{ task().deadline | date : "MMM d, y, h:mm a" }}
     </time>
@@ -227,9 +55,15 @@ Just in case
       </span>
     </div>
 
-    <p class="text-sm mt-2">{{ task().description }}</p>
+    <p
+      class="text-sm mt-2"
+      [ngClass]="{
+        'line-through text-gray-400': task().status === 'completed'
+      }"
+    >
+      {{ task().description }}
+    </p>
 
-    <!-- Reminder Badge -->
     <p *ngIf="task().timeLeft" class="text-sm mt-2 flex items-center gap-2">
       <span
         class="px-2 py-0.5 rounded-md text-white bg-fuchsia-500 text-xs font-medium"
@@ -242,12 +76,12 @@ Just in case
   <div
     class="flex flex-wrap lg:flex-nowrap items-center gap-3 w-full lg:w-auto"
   >
-    <span class="text-sm font-medium text-fuchsia-600">
-      Time Spent: {{ formatTime(elapsedTime) }}
+    <span class="text-sm font-medium text-fuchsia-600 cursor-pointer">
+      ⏱️: {{ formatTime(elapsedTime) }}
     </span>
 
     <button
-      class="px-3 py-1.5 bg-green-400 text-white rounded-lg hover:bg-green-600 transition w-full md:w-auto"
+      class="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 transition-all duration-300 w-full lg:w-auto border border-gray-300 shadow-sm"
       (click)="startStopTimer()"
     >
       <fa-icon [icon]="timerRunning ? pause : play"></fa-icon>
@@ -257,41 +91,32 @@ Just in case
   <div
     class="flex flex-wrap lg:flex-nowrap items-center gap-3 w-full lg:w-auto"
   >
-    <!-- Reminder Dropdown -->
-    <!-- <select
-      class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-      (change)="setReminder($event)"
-      [value]="task().timeLeft || ''"
-    >
-      <option value="">Set a reminder</option>
-      <option value="24">24h before Deadline</option>
-      <option value="12">12h before Deadline</option>
-      <option value="1">1h before Deadline</option>
-    </select> -->
     <button
       (click)="toggleReminder()"
-      class="px-4 py-2 rounded-lg font-medium transition-all duration-300 text-white disabled:cursor-not-allowed w-full md:w-auto"
+      class="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium w-full lg:w-auto transition-all duration-300 border shadow-sm cursor-pointer"
       [ngClass]="
         task().reminderActive
-          ? 'bg-red-500 hover:bg-red-600'
-          : 'bg-blue-500 hover:bg-blue-600'
+          ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100'
+          : 'bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100'
       "
     >
       {{ task().reminderActive ? "❌ Disable Reminder" : "🔔 Set Reminder" }}
     </button>
+    @if (canEdit) {
 
     <button
-      class="px-3 py-1.5 bg-fuchsia-400 text-white rounded-lg hover:bg-fuchsia-600 transition w-full md:w-auto"
+      class="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all duration-300 w-full lg:w-auto shadow-sm"
       (click)="onEditTask()"
     >
-      <fa-icon [icon]="faEdit"></fa-icon>
+      <fa-icon [icon]="faEdit" class="cursor-pointer"></fa-icon>
     </button>
-
+    } @if (canEdit) {
     <button
-      class="px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-700 transition w-full md:w-auto"
+      class="px-4 py-2 cursor-pointer rounded-xl text-sm font-medium text-rose-600 bg-rose-50 border border-rose-200 hover:bg-rose-100 transition-all duration-300 w-full lg:w-auto shadow-sm"
       (click)="onDeleteTask()"
     >
-      <fa-icon [icon]="faTrash"></fa-icon>
+      <fa-icon [icon]="faTrash" class="cursor-pointer"></fa-icon>
     </button>
+    }
   </div>
 </div>

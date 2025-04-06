@@ -1,93 +1,7 @@
-<!-- <option value="today">Deadline: Today</option>
-<option value="tomorrow">Deadline: Tomorrow</option>
-<option value="This Week">Deadline: This Week</option>
-<option value="This Month">Deadline: This Month</option> -->
-<!-- <div class="tasks space-y-4">
-  <div class="flex justify-between items-center mb-4">
-    <h3 class="font-semibold text-lg">Projects's Tasks</h3>
-    <div class="flex space-x-4">
-      <select
-        class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
-      >
-        <option>Sort by Priority</option>
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </select>
-      <select
-        class="border border-gray-300 rounded-lg px-3 py-1.5 focus:border-mainColor focus:ring-mainColor transition"
-        value="priority:low"
-        (change)="filterTasks($event)"
-      >
-        <option value="">Filter by</option>
-        <option value="priority:high">priority: High</option>
-        <option value="priority:medium">priority: Medium</option>
-        <option value="priority:low">priority: Low</option>
-        <option value="status:not-started">status: Not Started</option>
-        <option value="status:in-progress">status: In Progress</option>
-        <option value="status:completed">status: Completed</option>
-      </select>
-    </div>
-  </div>
-  @for (task of tasks; track task._id) {
-
-  <app-task
-    [task]="task"
-    (deleteTask)="onDeleteTask($event)"
-    (editTask)="onEditTask($event)"
-  />
-  }
-</div> -->
-<!-- <div class="tasks space-y-4">
-  <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
-    <h3 class="font-semibold text-lg flex-1">Project's Tasks</h3>
-    <div class="flex flex-wrap gap-3">
-      <select
-        class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-      >
-        <option>Sort by Priority</option>
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </select>
-      <select
-        class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-        (change)="filterTasks($event)"
-      >
-        <option value="">Filter by</option>
-        <option value="priority:high">Priority: High</option>
-        <option value="priority:medium">Priority: Medium</option>
-        <option value="priority:low">Priority: Low</option>
-        <option value="status:not-started">Status: Not Started</option>
-        <option value="status:in-progress">Status: In Progress</option>
-        <option value="status:completed">Status: Completed</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="space-y-4">
-    @for (task of tasks; track task._id) {
-    <app-task
-      [task]="task"
-      (deleteTask)="onDeleteTask($event)"
-      (editTask)="onEditTask($event)"
-    />
-    }
-  </div>
-</div> -->
 <div class="tasks space-y-4">
   <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
     <h3 class="font-semibold text-lg flex-1 min-w-0">Tasks</h3>
     <div class="flex flex-wrap gap-3 w-full md:w-auto">
-      <!-- <select
-        class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
-        (change)="sortTasks($event)"
-      >
-        <option>Sort by Priority</option>
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-      </select> -->
       <select
         class="border border-gray-300 rounded-lg px-3 py-1.5 w-full md:w-auto focus:border-fuchsia-500 focus:ring-fuchsia-500 transition"
         (change)="filterTasks($event)"
@@ -100,18 +14,37 @@
         <option value="status:not-started">Status: Not Started</option>
         <option value="status:in-progress">Status: In Progress</option>
         <option value="status:completed">Status: Completed</option>
-        <!-- <option value="deadline">Deadline</option> -->
       </select>
     </div>
   </div>
 
   <div class="space-y-4">
-    @for (task of filteredTasks; track task._id) {
+    @if (tasks?.length == 0) {
+    <div
+      class="relative flex flex-col items-center justify-center min-h-[30vh] text-center z-0"
+    >
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/4076/4076400.png"
+        alt="No Tasks"
+        class="w-24 h-24 mb-2 opacity-80 brightness-200"
+      />
+      <p class="text-lg font-semibold opacity-80 no-tasks">
+        No tasks yet for this project! Start by adding a task.
+      </p>
+    </div>
+    } @else { @if(filteredTasks.length==0){
+    <p
+      class="text-center text-lg text-gray-500 font-medium p-4 bg-gray-100 rounded-lg shadow-sm"
+    >
+      🚀 No tasks in this category! Get started by adding your first task.
+    </p>
+    }@else { @for (task of filteredTasks; track task._id) {
+
     <app-task
       [task]="task"
       (deleteTask)="onDeleteTask($event)"
       (editTask)="onEditTask($event)"
     />
-    }
+    } } }
   </div>
 </div>

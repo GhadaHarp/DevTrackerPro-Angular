@@ -1,19 +1,3 @@
-// import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-// import {
-//   FormControl,
-//   FormGroup,
-//   ReactiveFormsModule,
-//   Validators,
-// } from '@angular/forms';
-// import { Router } from '@angular/router';
-// import { APIService } from '../../services/API.service';
-
-// @Component({
-//   selector: 'app-new-project',
-//   imports: [ReactiveFormsModule],
-//   templateUrl: './new-project.component.html',
-//   styleUrl: './new-project.component.css',
-// })
 import {
   Component,
   Input,
@@ -75,7 +59,11 @@ export class NewProjectComponent implements OnChanges {
       this.enteredTitle = this.currProjectData.title;
       this.enteredDescription = this.currProjectData.description;
       const date = new Date(this.currProjectData.deadline);
-      this.enteredDate = date.toISOString().split('T')[0];
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      this.enteredDate = localDate.toISOString().slice(0, 16);
+
       this.newProjectForm.setValue({
         title: this.enteredTitle,
         description: this.enteredDescription,
@@ -93,7 +81,6 @@ export class NewProjectComponent implements OnChanges {
 
   onSubmit() {
     if (this.isEditing) {
-      // Editing an existing project
       this.apiService
         .editProject(
           this.currProjectData._id,
@@ -118,7 +105,6 @@ export class NewProjectComponent implements OnChanges {
           }
         );
     } else {
-      // Adding a new project
       this.apiService
         .addProject(
           {
@@ -131,7 +117,7 @@ export class NewProjectComponent implements OnChanges {
         .subscribe(
           (res) => {
             console.log(res);
-            this.addProject.emit(res.data); // Notify parent about the new project
+            this.addProject.emit(res.data);
             this.close.emit();
           },
           (error) => {

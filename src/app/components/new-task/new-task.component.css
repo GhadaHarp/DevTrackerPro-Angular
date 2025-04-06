@@ -36,6 +36,7 @@ dialog {
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 0; /* Remove default margin for <dialog> */
+  z-index: 1000;
 }
 
 h2 {

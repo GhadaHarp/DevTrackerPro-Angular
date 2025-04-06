@@ -1,12 +1,13 @@
-import { Component, EventEmitter, input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, input, Output } from '@angular/core';
 import { TasksComponent } from '../tasks/tasks.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 // import { APIService } from '../../services/API.service';
 @Component({
   selector: 'app-project',
-  imports: [TasksComponent, FontAwesomeModule, DatePipe],
+  imports: [TasksComponent, FontAwesomeModule, DatePipe, CommonModule],
   templateUrl: './project.component.html',
   styleUrl: './project.component.css',
 })
@@ -18,19 +19,20 @@ export class ProjectComponent {
   @Output() editProject = new EventEmitter<any>();
   @Output() addTask = new EventEmitter<any>();
   @Output() editTask = new EventEmitter<any>();
-  // constructor(private apiService:APIService){}
+  @Output() deleteTask = new EventEmitter<any>();
   onDeleteProject() {
     this.deleteProject.emit(this.project()._id);
-    // console.log(this.project());
   }
   onEditProject() {
     this.editProject.emit(this.project()._id);
-    // console.log(this.project());
   }
   onAddTask() {
     this.addTask.emit(this.project()._id);
   }
   onEditTask(task: any) {
     this.editTask.emit(task);
+  }
+  onDeleteTask(task: any) {
+    this.deleteProject.emit(task);
   }
 }

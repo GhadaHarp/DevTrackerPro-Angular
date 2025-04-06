@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  Input,
   input,
   OnDestroy,
   OnInit,
@@ -16,7 +17,7 @@ import {
 import { APIService } from '../../services/API.service';
 import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, take } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
 import Toastify from 'toastify-js';
 @Component({
@@ -34,9 +35,10 @@ export class TaskComponent implements OnInit, OnDestroy {
   timerRunning: boolean = false;
   play = faPlay;
   pause = faPause;
-  taskSubscription!: Subscription;
   @Output() deleteTask = new EventEmitter<any>();
   @Output() editTask = new EventEmitter<any>();
+  @Input() canEdit: boolean = true;
+
   constructor(
     private apiService: APIService,
     private router: Router,
@@ -48,7 +50,7 @@ export class TaskComponent implements OnInit, OnDestroy {
         const container = document.createElement('div');
         container.style.display = 'flex';
         container.style.alignItems = 'center';
-        container.style.justifyContent = 'space-between'; // Space out elements
+        container.style.justifyContent = 'space-between';
         container.style.gap = '10px';
         container.style.width = '100%';
 
@@ -67,12 +69,12 @@ export class TaskComponent implements OnInit, OnDestroy {
 
         // Close Button
         const closeButton = document.createElement('span');
-        closeButton.innerHTML = '&times;'; // "×" symbol
+        closeButton.innerHTML = '&times;';
         closeButton.style.fontSize = '16px';
         closeButton.style.cursor = 'pointer';
-        closeButton.style.color = '#ff4b2b'; // Red color
+        closeButton.style.color = '#ff4b2b';
         closeButton.style.fontWeight = 'bold';
-        closeButton.onclick = () => toastInstance.hideToast(); // ✅ Close action
+        closeButton.onclick = () => toastInstance.hideToast();
 
         // Append Elements
         container.appendChild(avatar);
@@ -81,70 +83,67 @@ export class TaskComponent implements OnInit, OnDestroy {
 
         return container;
       })(),
-      duration: 10000, // 🔥 Stays until "X" is clicked
-      close: false, // Disable default close button (using custom "X")
+      duration: 10000,
+      close: false,
       gravity: 'top',
       position: 'center',
       stopOnFocus: true,
       style: {
-        background: 'linear-gradient(to right, #8e2de2, #4a00e0)', // Purple gradient
+        background: 'linear-gradient(to right, #8e2de2, #4a00e0)',
         borderRadius: '8px',
         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
         padding: '12px 16px',
         fontSize: '14px',
         color: '#fff',
         fontWeight: '500',
-        width: 'clamp(250px, 40vw, 400px)', // ✅ Responsive width: 250px min, 40vw normal, 400px max
-        position: 'fixed', // ✅ Absolute positioning is not enough, use fixed
-        top: '5%', // ✅ Moves it closer to the top but still visible
-        left: '50%',
-        transform: 'translateX(-50%)', // ✅ Centers it horizontally
-        zIndex: '9999', // ✅ Ensures it appears above other elements
+        maxWidth: '90vw',
+        width: 'clamp(250px, 40vw, 400px)',
+        position: 'fixed',
+        top: '5%',
+        left: '20%',
+        // transform: 'translateX(-50%)',
+        zIndex: '9999',
+        textAlign: 'center',
+        wordBreak: 'break-word',
       },
     });
 
-    // ✅ Show the toast
     toastInstance.showToast();
   }
-  // ngOnInit(): void {
-  //   // console.log('on init');
-  //   // console.log(this.task());
-  //   this.elapsedTime = this.task().timeSpent || 0;
-  //   console.log(this.task());
-  //   // console.log(this.elapsedTime);
-  //   // this.taskSubscription = this.socketService
-  //   //   .on('taskDueSoon')
-  //   //   .subscribe((data) => {
-  //   //     this.showNotification(data);
-  //   //   });
-  // }
+
+  reminderSub!: Subscription;
+  hasSubscribed = false;
+
   ngOnInit(): void {
     this.elapsedTime = this.task().timeSpent || 0;
 
-    // 🔔 Listen for task reminders from WebSocket
-    this.socketService.on('taskReminder').subscribe((reminder: any) => {
-      if (!this.task()) return; // Ensure task exists before processing the reminder
+    if (!this.hasSubscribed) {
+      this.reminderSub = this.socketService
+        .on('taskReminder')
+        .subscribe((reminder: any) => {
+          if (!this.task()) return;
 
-      console.log('Received Reminder:', reminder);
+          if (
+            reminder.userId === this.task().userId &&
+            reminder.title === this.task().title
+          ) {
+            const timeLeft = reminder.timeLeft;
+            const displayTime = timeLeft >= 60 ? timeLeft / 60 : timeLeft;
 
-      // Check if the reminder is for the current task and user
-      if (
-        reminder.userId === this.task().userId &&
-        reminder.title === this.task().title
-      ) {
-        const timeLeft = reminder.timeLeft;
-        const displayTime = timeLeft >= 60 ? timeLeft / 60 : timeLeft; // Convert to hours if needed
+            this.showNotification(
+              `⏳ Reminder: Task "${reminder.title}" is due in ${displayTime} hour!`
+            );
+          }
+        });
 
-        this.showNotification(
-          `⏳ Reminder: Task "${reminder.title}" is due in ${displayTime} hour!`
-        );
-      }
-    });
+      this.hasSubscribed = true;
+    }
   }
+
   onDeleteTask() {
     this.apiService.deleteTask(this.task()._id, this.token).subscribe(
       (res) => {
-        // console.log(res);
+        console.log(res);
         this.deleteTask.emit(this.task()._id);
       },
       (error) => {
@@ -183,7 +182,7 @@ export class TaskComponent implements OnInit, OnDestroy {
         .editTaskTime(this.task()._id, { time: this.elapsedTime }, this.token)
         .subscribe(
           (res) => {
-            // console.log(res);
+            console.log(res);
           },
           (err) => {
             console.log(err);
@@ -203,24 +202,6 @@ export class TaskComponent implements OnInit, OnDestroy {
       .toString()
       .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
-  // setReminder(event: any) {
-  //   console.log(Number(event.target.value));
-  //   const timeLeft = Number(event.target.value);
-  //   this.apiService
-  //     .editTask(
-  //       this.task()._id,
-  //       { timeLeft, reminderEnabled: true },
-  //       this.token
-  //     )
-  //     .subscribe(
-  //       (res) => {
-  //         console.log('time left updated', res);
-  //       },
-  //       (err) => {
-  //         console.log(err);
-  //       }
-  //     );
-  // }
 
   setReminder() {
     this.apiService
@@ -235,10 +216,10 @@ export class TaskComponent implements OnInit, OnDestroy {
       });
   }
   toggleReminder() {
-    this.task().reminderActive = !this.task().reminderActive; // Toggle state
-    this.task().reminderTimes?.length
-      ? (this.task().reminderTimes = [])
-      : (this.task().reminderTimes = [1, 12, 24]);
+    this.task().reminderActive = !this.task().reminderActive;
+    this.task().reminderActive
+      ? (this.task().reminderTimes = [1, 12, 24])
+      : (this.task().reminderTimes = []);
     this.apiService
       .editTask(
         this.task()._id,
@@ -259,6 +240,6 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.taskSubscription?.unsubscribe();
+    this.reminderSub?.unsubscribe();
   }
 }

@@ -41,7 +41,7 @@ export class NewTaskComponent implements OnChanges {
   @Output() addTask = new EventEmitter<any>();
   @Output() editTask = new EventEmitter<any>();
   @Input({ required: true }) userId!: string;
-  @Input({ required: true }) project!: any;
+  @Input() project!: any;
   @Input() currTaskData!: any;
   isEditing = false;
   enteredTitle = '';
@@ -73,8 +73,10 @@ export class NewTaskComponent implements OnChanges {
       this.enteredPriority = this.currTaskData.priority;
       this.enteredStatus = this.currTaskData.status;
       const date = new Date(this.currTaskData.deadline);
-      this.enteredDate = date.toISOString().split('T')[0];
-      this.enteredDate = date.toISOString().slice(0, 16); // Extracts YYYY-MM-DDTHH:mm
+      const localDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000
+      );
+      this.enteredDate = localDate.toISOString().slice(0, 16);
 
       this.newTaskForm.setValue({
         title: this.enteredTitle,
@@ -114,7 +116,6 @@ export class NewTaskComponent implements OnChanges {
         .subscribe(
           (res) => {
             console.log(res);
-            // this.addTask.emit(res.data);
             this.editTask.emit(res.data);
             this.close.emit();
           },
@@ -150,7 +151,6 @@ export class NewTaskComponent implements OnChanges {
         },
         (error) => {
           console.log(error);
-
           this.router.navigate(['/error'], {
             state: { message: error.error.message },
           });
