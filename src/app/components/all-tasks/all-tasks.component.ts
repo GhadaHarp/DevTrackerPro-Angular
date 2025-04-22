@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { APIService } from '../../services/API.service';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TaskComponent } from '../task/task.component';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { TasksComponent } from '../tasks/tasks.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
@@ -117,6 +117,7 @@ export class AllTasksComponent implements OnInit {
   isLoading!: Observable<false>;
   userId = localStorage.getItem('userID') || '';
   token = localStorage.getItem('token') || '';
+  router = inject(Router);
   filters: any = {
     status: '',
     priority: '',
@@ -126,6 +127,15 @@ export class AllTasksComponent implements OnInit {
   constructor(private apiService: APIService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    if (!this.token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.userId) {
+      console.error('No user ID found.');
+      return;
+    }
     setTimeout(() => {
       this.fetchTasks();
     }, 0);
